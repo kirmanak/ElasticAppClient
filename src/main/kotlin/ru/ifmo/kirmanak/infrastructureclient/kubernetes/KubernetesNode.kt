@@ -1,6 +1,6 @@
 package ru.ifmo.kirmanak.infrastructureclient.kubernetes
 
-import io.kubernetes.client.models.V1Pod
+import io.kubernetes.client.openapi.models.V1Pod
 import ru.ifmo.kirmanak.infrastructureclient.ClusterNode
 
 internal class KubernetesNode(private val pod: V1Pod) : ClusterNode {
