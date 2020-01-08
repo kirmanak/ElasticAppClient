@@ -16,7 +16,7 @@ class KubernetesTest {
         val configPath = Paths.get(home, ".kube", "config")
         val config = KubeConfig.loadKubeConfig(Files.newBufferedReader(configPath))
         val apiClient = ClientBuilder.kubeconfig(config).build()
-        kubeClient = ClientFactory.getClient(apiClient, "default")
+        kubeClient = ClientFactory.getClient(apiClient, "default", "nginx-deployment")
     }
 
     @Test

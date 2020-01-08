@@ -6,44 +6,38 @@ import ru.ifmo.kirmanak.infrastructureclient.ClusterNode
 import ru.ifmo.kirmanak.infrastructureclient.kubernetes.models.MetricsV1Beta1PodMetrics
 import java.math.BigDecimal
 
-internal class KubernetesNode(private val pod: V1Pod, private val client: KubernetesClient) : ClusterNode {
-    override fun getCPULoad() = getResourceRequests("cpu")
+internal open class KubernetesNode(private val pod: V1Pod, private val client: KubernetesClient) : ClusterNode {
+    private val name: String
+        get() = pod.metadata?.name ?: throw ClientException("Node name or the whole metadata is unknown!")
 
-    override fun getRAMLoad() = getResourceRequests("memory")
+    override fun getCPULoad() = getUsage("cpu")
 
-    private fun getResourceRequests(name: String): Double {
-        val podName = pod.metadata?.name
-            ?: throw ClientException("Current node has no name or no metadata at all!")
+    override fun getRAMLoad() = getUsage("memory")
 
-        val podNameSpace = pod.metadata?.namespace
-            ?: throw ClientException("Node $podName has no namespace!")
-
-        val allMetrics = client.getPodMetrics(podNameSpace).items
-            ?: throw ClientException("Metrics were not found for namespace $podNameSpace")
-
-        val podMetrics = findMetrics(podName, allMetrics)
-            ?: throw ClientException("Node $podName from namespace $podNameSpace metrics were not received!")
-
-        val podContainers = podMetrics.containers
-            ?: throw ClientException("Node $podName containers were not found!")
+    private fun getUsage(metricName: String): Double {
+        val podContainers = getPodMetrics().containers
+            ?: throw ClientException("Node \"$name\" containers were not found!")
 
         return podContainers.fold(BigDecimal.ZERO) { acc, container ->
-            val usage = container.usage?.get(name)?.number
-            if (usage === null) {
-                acc
-            } else {
-                acc.add(usage)
-            }
+            val usage = container.usage?.get(metricName)?.number
+                ?: throw ClientException("Usage of \"$metricName\" was not found for container \"${container.name}\"")
+            acc.add(usage)
         }.toDouble()
     }
 
-    private fun findMetrics(name: String, items: List<MetricsV1Beta1PodMetrics?>): MetricsV1Beta1PodMetrics? {
-        for (item in items)
-            if (item?.metadata?.name == name)
-                return item
+    private fun getPodMetrics(): MetricsV1Beta1PodMetrics {
+        val allMetrics = client.getMetricsPerPod().items
+            ?: throw ClientException("Metrics API response has no items")
 
-        return null
+        for (item in allMetrics) {
+            val itemName = item.metadata?.name ?: throw ClientException("Metrics received without name or metadata!")
+
+            if (itemName == name)
+                return item
+        }
+
+        throw ClientException("Metrics for pod \"$name\" were not found")
     }
 
-    override fun toString() = pod.metadata?.name ?: "Unknown pod"
+    override fun toString() = name
 }

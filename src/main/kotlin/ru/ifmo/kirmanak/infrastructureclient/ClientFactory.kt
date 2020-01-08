@@ -7,8 +7,8 @@ import ru.ifmo.kirmanak.infrastructureclient.opennebula.OpenNebulaClient
 
 open class ClientFactory {
     companion object {
-        fun getClient(kubeClient: ApiClient, nameSpace: String): ClusterClient {
-            return KubernetesClient(kubeClient, nameSpace)
+        fun getClient(kubeClient: ApiClient, namespace: String, deployment: String): ClusterClient {
+            return KubernetesClient(kubeClient, namespace, deployment)
         }
 
         fun getClient(openNebulaClient: Client): ClusterClient {

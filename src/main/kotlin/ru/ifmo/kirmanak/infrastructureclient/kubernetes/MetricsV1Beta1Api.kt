@@ -39,16 +39,8 @@ internal class MetricsV1Beta1Api(private var api: ApiClient) {
 
         val authNames = arrayOf("BearerToken")
         return api.buildCall(
-            url,
-            "GET",
-            emptyList(),
-            emptyList(),
-            null,
-            headers,
-            emptyMap(),
-            emptyMap(),
-            authNames,
-            null
+            url, "GET", emptyList(), emptyList(), null, headers,
+            emptyMap(), emptyMap(), authNames, null
         )
     }
 
