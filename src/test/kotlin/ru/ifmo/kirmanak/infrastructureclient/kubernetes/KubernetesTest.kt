@@ -16,11 +16,21 @@ class KubernetesTest {
         val configPath = Paths.get(home, ".kube", "config")
         val config = KubeConfig.loadKubeConfig(Files.newBufferedReader(configPath))
         val apiClient = ClientBuilder.kubeconfig(config).build()
-        kubeClient = ClientFactory.getClient(apiClient, "kube-system")
+        kubeClient = ClientFactory.getClient(apiClient, "default")
     }
 
     @Test
     fun getNodesTest() {
-        kubeClient.getNodes().forEach { print(it) }
+        kubeClient.getNodes().forEach { println(it) }
+    }
+
+    @Test
+    fun printCPU() {
+        kubeClient.getNodes().forEach { println(it.getCPULoad()) }
+    }
+
+    @Test
+    fun printRAM() {
+        kubeClient.getNodes().forEach { println(it.getRAMLoad()) }
     }
 }
