@@ -10,6 +10,7 @@ import ru.ifmo.kirmanak.infrastructureclient.ClusterNode
 
 class KubernetesClient(apiClient: ApiClient, private val nameSpace: String) : ClusterClient {
     private val api = CoreV1Api(apiClient)
+    private val metrics = MetricsV1Beta1Api(apiClient)
 
     override fun getNodes(): Array<ClusterNode> {
         val nodes: V1PodList
@@ -20,7 +21,8 @@ class KubernetesClient(apiClient: ApiClient, private val nameSpace: String) : Cl
             throw ClientException(e)
         }
 
-        return nodes.items.map { KubernetesNode(it) }.toTypedArray()
+        return nodes.items.map { KubernetesNode(it, this) }.toTypedArray()
     }
 
+    internal fun getPodMetrics(nameSpace: String? = null) = metrics.getPodMetrics(nameSpace)
 }
