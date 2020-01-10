@@ -5,13 +5,15 @@ import org.opennebula.client.Client
 import ru.ifmo.kirmanak.infrastructureclient.kubernetes.KubernetesClient
 import ru.ifmo.kirmanak.infrastructureclient.opennebula.OpenNebulaClient
 
-open class ClientFactory {
+open class AppClientFactory {
     companion object {
-        fun getClient(kubeClient: ApiClient, namespace: String, deployment: String): ClusterClient {
+        @JvmStatic
+        fun getClient(kubeClient: ApiClient, namespace: String, deployment: String): AppClient {
             return KubernetesClient(kubeClient, namespace, deployment)
         }
 
-        fun getClient(openNebulaClient: Client): ClusterClient {
+        @JvmStatic
+        fun getClient(openNebulaClient: Client): AppClient {
             return OpenNebulaClient(openNebulaClient)
         }
     }

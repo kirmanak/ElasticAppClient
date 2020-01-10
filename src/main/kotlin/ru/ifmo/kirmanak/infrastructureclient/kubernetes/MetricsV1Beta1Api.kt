@@ -4,7 +4,7 @@ import com.google.gson.reflect.TypeToken
 import io.kubernetes.client.openapi.ApiClient
 import io.kubernetes.client.openapi.ApiResponse
 import okhttp3.Call
-import ru.ifmo.kirmanak.infrastructureclient.ClientException
+import ru.ifmo.kirmanak.infrastructureclient.AppClientException
 import ru.ifmo.kirmanak.infrastructureclient.kubernetes.models.MetricsV1Beta1PodMetricsList
 
 private const val API_PATH = "/apis/metrics.k8s.io/v1beta1"
@@ -50,7 +50,7 @@ internal class MetricsV1Beta1Api(private var api: ApiClient) {
         try {
             return api.execute(call, type)
         } catch (e: Exception) {
-            throw ClientException(e)
+            throw AppClientException(e)
         }
     }
 }

@@ -3,13 +3,13 @@ package ru.ifmo.kirmanak.infrastructureclient.opennebula
 import org.opennebula.client.Client
 import org.opennebula.client.OneResponse
 import org.opennebula.client.vm.VirtualMachinePool
-import ru.ifmo.kirmanak.infrastructureclient.ClientException
-import ru.ifmo.kirmanak.infrastructureclient.ClusterClient
-import ru.ifmo.kirmanak.infrastructureclient.ClusterNode
+import ru.ifmo.kirmanak.infrastructureclient.AppClient
+import ru.ifmo.kirmanak.infrastructureclient.AppClientException
+import ru.ifmo.kirmanak.infrastructureclient.AppNode
 
-class OpenNebulaClient(private val client: Client) : ClusterClient {
+class OpenNebulaClient(private val client: Client) : AppClient {
 
-    override fun getNodes(): Array<ClusterNode> {
+    override fun getNodes(): Array<AppNode> {
         val pool = VirtualMachinePool(client)
         throwIfError(pool.info())
 
@@ -21,10 +21,10 @@ class OpenNebulaClient(private val client: Client) : ClusterClient {
     XPathFactory.newInstance().newXPath()
 } */
 
-@Throws(ClientException::class)
+@Throws(AppClientException::class)
 internal fun Any.throwIfError(response: OneResponse): OneResponse {
     if (response.isError)
-        throw ClientException(response.errorMessage)
+        throw AppClientException(response.errorMessage)
     else
         return response
 }
