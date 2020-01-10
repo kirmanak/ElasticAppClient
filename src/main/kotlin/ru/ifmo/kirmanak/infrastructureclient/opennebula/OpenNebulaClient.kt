@@ -1,9 +1,9 @@
 package ru.ifmo.kirmanak.infrastructureclient.opennebula
 
 import org.opennebula.client.Client
-import org.opennebula.client.OneResponse
 import org.opennebula.client.vm.VirtualMachinePool
 import org.opennebula.client.vmgroup.VMGroup
+import org.w3c.dom.Node
 import ru.ifmo.kirmanak.infrastructureclient.AppClient
 import ru.ifmo.kirmanak.infrastructureclient.AppClientException
 import ru.ifmo.kirmanak.infrastructureclient.AppNode
@@ -15,29 +15,29 @@ class OpenNebulaClient(
     override fun getNodes(): Array<AppNode> {
         val pool = VirtualMachinePool(client)
         throwIfError(pool.info())
-        val group = VMGroup(groupId, client)
-        println(throwIfError(group.info()).message)
+        val vmIDs = getVMIdentifiers()
 
-        return pool.map { OpenNebulaNode(it) }.toTypedArray()
+        return pool.filter { vmIDs.contains(it.id()) }.map { OpenNebulaNode(it) }.toTypedArray()
+    }
+
+    private fun getVMIdentifiers(): Array<Int> {
+        val role = findRole() ?: throw AppClientException("Failed to find role with id $roleId in VM group $groupId")
+        val vmList = getString(role, "VMS")
+        return vmList.split(",").map { it.toInt() }.toTypedArray()
+    }
+
+    private fun findRole(): Node? {
+        val group = VMGroup(groupId, client)
+
+        val root = getRootElement(group.info())
+        val roleList = getNodeList(root, "ROLES/ROLE")
+        for (i in 0..roleList.length) {
+            val item = roleList.item(i)
+            val id = getNumber(item, "ID").toInt()
+            if (id == roleId)
+                return item
+        }
+
+        return null
     }
 }
-
-/* internal val Any.xpath by lazy {
-    XPathFactory.newInstance().newXPath()
-} */
-
-@Throws(AppClientException::class)
-internal fun Any.throwIfError(response: OneResponse): OneResponse {
-    if (response.isError)
-        throw AppClientException(response.errorMessage)
-    else
-        return response
-}
-
-/* internal fun Any.getXMLNode(response: OneResponse, nodeType: String): Node {
-    val message = response.message
-    val docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder()
-    val document = docBuilder.parse(ByteArrayInputStream(message.toByteArray()))
-    val docRoot = document.documentElement
-    return xpath.evaluate(nodeType, docRoot, XPathConstants.NODE) as Node
-} */

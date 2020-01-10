@@ -15,6 +15,6 @@ class OpenNebulaTest {
 
     @Test
     fun connects() {
-        oneClient.getNodes().forEach { print(it) }
+        oneClient.getNodes().forEach { println(it) }
     }
 }
