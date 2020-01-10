@@ -4,6 +4,7 @@ import io.kubernetes.client.openapi.ApiClient
 import io.kubernetes.client.openapi.ApiException
 import io.kubernetes.client.openapi.apis.AppsV1Api
 import io.kubernetes.client.openapi.apis.CoreV1Api
+import io.kubernetes.client.openapi.models.V1Deployment
 import ru.ifmo.kirmanak.infrastructureclient.AppClient
 import ru.ifmo.kirmanak.infrastructureclient.AppClientException
 import ru.ifmo.kirmanak.infrastructureclient.AppNode
@@ -20,8 +21,7 @@ open class KubernetesClient(
     override fun getNodes(): Array<AppNode> {
         val dep = getDeployment()
 
-        val selector = dep.spec?.selector?.matchLabels?.get(DEPLOYMENT_SELECTOR)
-            ?: throw AppClientException("Deployment \"$deployment\" has no \"$DEPLOYMENT_SELECTOR\" selector")
+        val selector = getDeploymentSelector(dep)
         val labelSelector = "$DEPLOYMENT_SELECTOR=$selector"
 
         val pods = getPods(labelSelector)
@@ -47,4 +47,11 @@ open class KubernetesClient(
         } catch (e: ApiException) {
             throw AppClientException(e)
         }
+
+    private fun getDeploymentSelector(dep: V1Deployment) = dep
+        .spec
+        ?.selector
+        ?.matchLabels
+        ?.get(DEPLOYMENT_SELECTOR)
+        ?: throw AppClientException("Deployment \"$deployment\" has no \"$DEPLOYMENT_SELECTOR\" selector")
 }
