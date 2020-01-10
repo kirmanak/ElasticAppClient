@@ -17,4 +17,14 @@ class OpenNebulaTest {
     fun connects() {
         oneClient.getNodes().forEach { println(it) }
     }
+
+    @Test
+    fun printCPU() {
+        oneClient.getNodes().forEach { println(it.getCPULoad()) }
+    }
+
+    @Test
+    fun printRAM() {
+        oneClient.getNodes().forEach { println(it.getRAMLoad()) }
+    }
 }
