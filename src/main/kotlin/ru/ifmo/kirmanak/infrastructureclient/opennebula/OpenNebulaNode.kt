@@ -1,20 +1,26 @@
 package ru.ifmo.kirmanak.infrastructureclient.opennebula
 
 import org.opennebula.client.vm.VirtualMachine
+import ru.ifmo.kirmanak.infrastructureclient.AppClientException
 import ru.ifmo.kirmanak.infrastructureclient.AppNode
 
-internal class OpenNebulaNode(private val vm: VirtualMachine) : AppNode {
-    override fun getCPULoad(): Double {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+internal class OpenNebulaNode(vm: VirtualMachine) : AppNode {
+    private val name: String = vm.name ?: throw AppClientException("Unknown vm name")
+    private val cpuLoad = getUsage("CPU", vm)
+    private val memoryLoad = getUsage("MEMORY", vm)
+
+    override fun getCPULoad() = cpuLoad
+
+    override fun getRAMLoad() = memoryLoad
+
+    override fun getName() = name
+
+    private fun getUsage(resource: String, vm: VirtualMachine): Double {
+        val root = getRootElement(vm.info())
+        return getNumber(root, "MONITORING/$resource")
     }
 
-    override fun getRAMLoad(): Double {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun toString(): String {
+        return "OpenNebulaNode(name='$name', cpuLoad=$cpuLoad, memoryLoad=$memoryLoad)"
     }
-
-    override fun getName(): String {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun toString(): String = vm.name
 }
