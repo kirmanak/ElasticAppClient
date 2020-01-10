@@ -20,7 +20,7 @@ internal val Any.docBuilder by lazy {
 }
 
 @Throws(AppClientException::class)
-internal fun Any.throwIfError(response: OneResponse): OneResponse {
+internal fun throwIfError(response: OneResponse): OneResponse {
     if (response.isError)
         throw AppClientException(response.errorMessage)
     else
