@@ -10,7 +10,7 @@ class OpenNebulaTest {
 
     init {
         val client = Client("oneadmin:ConUsUlAtim3", null)
-        oneClient = AppClientFactory.getClient(client, 0, "ubuntu")
+        oneClient = AppClientFactory.getClient(client, 0, 0)
     }
 
     @Test

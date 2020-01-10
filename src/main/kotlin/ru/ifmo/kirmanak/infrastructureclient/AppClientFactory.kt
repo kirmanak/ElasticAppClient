@@ -13,8 +13,8 @@ open class AppClientFactory {
         }
 
         @JvmStatic
-        fun getClient(openNebulaClient: Client, groupID: Int, roleName: String): AppClient {
-            return OpenNebulaClient(openNebulaClient, groupID, roleName)
+        fun getClient(openNebulaClient: Client, groupID: Int, roleId: Int): AppClient {
+            return OpenNebulaClient(openNebulaClient, groupID, roleId)
         }
     }
 }

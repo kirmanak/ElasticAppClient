@@ -3,17 +3,20 @@ package ru.ifmo.kirmanak.infrastructureclient.opennebula
 import org.opennebula.client.Client
 import org.opennebula.client.OneResponse
 import org.opennebula.client.vm.VirtualMachinePool
+import org.opennebula.client.vmgroup.VMGroup
 import ru.ifmo.kirmanak.infrastructureclient.AppClient
 import ru.ifmo.kirmanak.infrastructureclient.AppClientException
 import ru.ifmo.kirmanak.infrastructureclient.AppNode
 
 class OpenNebulaClient(
-    private val client: Client, private val groupID: Int, private val roleName: String
+    private val client: Client, private val groupId: Int, private val roleId: Int
 ) : AppClient {
 
     override fun getNodes(): Array<AppNode> {
         val pool = VirtualMachinePool(client)
         throwIfError(pool.info())
+        val group = VMGroup(groupId, client)
+        println(throwIfError(group.info()).message)
 
         return pool.map { OpenNebulaNode(it) }.toTypedArray()
     }
