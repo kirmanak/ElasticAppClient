@@ -11,4 +11,8 @@ internal class OpenNebulaNode(private val vm: VirtualMachine) : AppNode {
     override fun getRAMLoad(): Double {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
+
+    override fun getName(): String {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 }

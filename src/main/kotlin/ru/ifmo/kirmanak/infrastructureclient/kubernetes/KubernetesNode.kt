@@ -6,16 +6,13 @@ import ru.ifmo.kirmanak.infrastructureclient.AppNode
 import ru.ifmo.kirmanak.infrastructureclient.kubernetes.models.MetricsV1Beta1PodMetrics
 import java.math.BigDecimal
 
-internal open class KubernetesNode(private val pod: V1Pod, private val client: KubernetesClient) : AppNode {
-    private val name: String
-        get() = pod.metadata?.name ?: throw AppClientException("Node name or the whole metadata is unknown!")
+internal open class KubernetesNode(pod: V1Pod, client: KubernetesClient) : AppNode {
+    private val name = pod.metadata?.name ?: throw AppClientException("Node name or the whole metadata is unknown!")
+    private val cpuLoad = getUsage("cpu", client)
+    private val memoryLoad = getUsage("memory", client)
 
-    override fun getCPULoad() = getUsage("cpu")
-
-    override fun getRAMLoad() = getUsage("memory")
-
-    private fun getUsage(metricName: String): Double {
-        val podContainers = getPodMetrics().containers
+    private fun getUsage(metricName: String, client: KubernetesClient): Double {
+        val podContainers = getPodMetrics(client).containers
             ?: throw AppClientException("Node \"$name\" containers were not found!")
 
         return podContainers.fold(BigDecimal.ZERO) { acc, container ->
@@ -25,7 +22,7 @@ internal open class KubernetesNode(private val pod: V1Pod, private val client: K
         }.toDouble()
     }
 
-    private fun getPodMetrics(): MetricsV1Beta1PodMetrics {
+    private fun getPodMetrics(client: KubernetesClient): MetricsV1Beta1PodMetrics {
         val allMetrics = client.getMetricsPerPod().items
             ?: throw AppClientException("Metrics API response has no items")
 
@@ -39,5 +36,13 @@ internal open class KubernetesNode(private val pod: V1Pod, private val client: K
         throw AppClientException("Metrics for pod \"$name\" were not found")
     }
 
-    override fun toString() = name
+    override fun getCPULoad() = cpuLoad
+
+    override fun getRAMLoad() = memoryLoad
+
+    override fun getName() = name
+
+    override fun toString(): String {
+        return "KubernetesNode(name='$name', CPULoad=$cpuLoad, RAMLoad=$memoryLoad)"
+    }
 }
