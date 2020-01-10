@@ -7,7 +7,9 @@ import ru.ifmo.kirmanak.infrastructureclient.AppClient
 import ru.ifmo.kirmanak.infrastructureclient.AppClientException
 import ru.ifmo.kirmanak.infrastructureclient.AppNode
 
-class OpenNebulaClient(private val client: Client) : AppClient {
+class OpenNebulaClient(
+    private val client: Client, private val groupID: Int, private val roleName: String
+) : AppClient {
 
     override fun getNodes(): Array<AppNode> {
         val pool = VirtualMachinePool(client)
