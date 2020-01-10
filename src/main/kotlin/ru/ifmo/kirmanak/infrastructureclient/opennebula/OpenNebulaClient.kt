@@ -20,10 +20,10 @@ class OpenNebulaClient(
         return pool.filter { vmIDs.contains(it.id()) }.map { OpenNebulaNode(it) }.toTypedArray()
     }
 
-    private fun getVMIdentifiers(): Array<Int> {
+    private fun getVMIdentifiers(): Set<Int> {
         val role = findRole() ?: throw AppClientException("Failed to find role with id $roleId in VM group $groupId")
         val vmList = getString(role, "VMS")
-        return vmList.split(",").map { it.toInt() }.toTypedArray()
+        return vmList.split(",").map { it.toInt() }.toSortedSet()
     }
 
     private fun findRole(): Node? {
