@@ -10,7 +10,7 @@ class OpenNebulaTest {
 
     init {
         val client = Client("oneadmin:ConUsUlAtim3", null)
-        oneClient = AppClientFactory.getClient(client, 0, 0)
+        oneClient = AppClientFactory.getClient(client, 0, 0, 1)
     }
 
     @Test
@@ -26,5 +26,15 @@ class OpenNebulaTest {
     @Test
     fun printRAM() {
         oneClient.getAppInstances().forEach { println(it.getRAMLoad()) }
+    }
+
+    @Test
+    fun addInstance() {
+        oneClient.scaleInstances(1)
+    }
+
+    @Test
+    fun removeInstance() {
+        oneClient.scaleInstances(-1)
     }
 }
