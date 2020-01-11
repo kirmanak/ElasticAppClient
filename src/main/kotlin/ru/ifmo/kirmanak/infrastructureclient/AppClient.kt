@@ -8,7 +8,7 @@ interface AppClient {
      * Requests information about currently working application instances from infrastructure provider.
      */
     @Throws(AppClientException::class)
-    fun getNodes(): Array<AppNode>
+    fun getAppInstances(): Array<AppInstance>
 
     /**
      * Scales application instances count by {@param count}.
@@ -16,5 +16,5 @@ interface AppClient {
      * If {@param count} is zero nothing will be done.
      */
     @Throws(AppClientException::class)
-    fun scaleNodes(count: Int)
+    fun scaleInstances(count: Int)
 }

@@ -6,21 +6,31 @@ import org.opennebula.client.vmgroup.VMGroup
 import org.w3c.dom.Node
 import ru.ifmo.kirmanak.infrastructureclient.AppClient
 import ru.ifmo.kirmanak.infrastructureclient.AppClientException
-import ru.ifmo.kirmanak.infrastructureclient.AppNode
+import ru.ifmo.kirmanak.infrastructureclient.AppInstance
 
 open class OpenNebulaClient(
     private val client: Client, private val groupId: Int, private val roleId: Int
 ) : AppClient {
 
-    override fun getNodes(): Array<AppNode> {
+    override fun getAppInstances(): Array<AppInstance> {
         val pool = VirtualMachinePool(client)
         throwIfError(pool.info())
         val vmIDs = getVMIdentifiers()
 
-        return pool.filter { vmIDs.contains(it.id()) }.map { OpenNebulaNode(it) }.toTypedArray()
+        return pool.filter { vmIDs.contains(it.id()) }.map { OpenNebulaInstance(it) }.toTypedArray()
     }
 
-    override fun scaleNodes(count: Int) {
+    override fun scaleInstances(count: Int) {
+        if (count > 0) addInstances(count)
+        else if (count < 0) removeInstances(-count)
+    }
+
+    private fun addInstances(count: Int) {
+        // VMGROUP = [ VMGROUP_NAME = "muilt-tier app", ROLE = "db" ]
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    private fun removeInstances(count: Int) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

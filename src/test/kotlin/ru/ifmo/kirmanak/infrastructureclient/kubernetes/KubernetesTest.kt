@@ -21,16 +21,16 @@ class KubernetesTest {
 
     @Test
     fun getNodesTest() {
-        kubeClient.getNodes().forEach { println(it) }
+        kubeClient.getAppInstances().forEach { println(it) }
     }
 
     @Test
     fun printCPU() {
-        kubeClient.getNodes().forEach { println(it.getCPULoad()) }
+        kubeClient.getAppInstances().forEach { println(it.getCPULoad()) }
     }
 
     @Test
     fun printRAM() {
-        kubeClient.getNodes().forEach { println(it.getRAMLoad()) }
+        kubeClient.getAppInstances().forEach { println(it.getRAMLoad()) }
     }
 }

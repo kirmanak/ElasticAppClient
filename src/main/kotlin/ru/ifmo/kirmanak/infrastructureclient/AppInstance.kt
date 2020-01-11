@@ -7,7 +7,7 @@ package ru.ifmo.kirmanak.infrastructureclient
  * Be aware: all of the information is cached in object's fields.
  * Instance might not exist by the time data is requested.
  */
-interface AppNode {
+interface AppInstance {
     /**
      * CPU load is represented in CPU core usage in the last minute.
      * For instance, if this value is 0.5, then half of a CPU core was used in the minute before data was requested.

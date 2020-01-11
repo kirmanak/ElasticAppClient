@@ -2,9 +2,9 @@ package ru.ifmo.kirmanak.infrastructureclient.opennebula
 
 import org.opennebula.client.vm.VirtualMachine
 import ru.ifmo.kirmanak.infrastructureclient.AppClientException
-import ru.ifmo.kirmanak.infrastructureclient.AppNode
+import ru.ifmo.kirmanak.infrastructureclient.AppInstance
 
-internal class OpenNebulaNode(vm: VirtualMachine) : AppNode {
+internal class OpenNebulaInstance(vm: VirtualMachine) : AppInstance {
     private val name: String = vm.name ?: throw AppClientException("Unknown vm name")
     private val cpuLoad = getUsage("CPU", vm)
     private val memoryLoad = getUsage("MEMORY", vm) * 1024

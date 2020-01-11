@@ -2,11 +2,11 @@ package ru.ifmo.kirmanak.infrastructureclient.kubernetes
 
 import io.kubernetes.client.openapi.models.V1Pod
 import ru.ifmo.kirmanak.infrastructureclient.AppClientException
-import ru.ifmo.kirmanak.infrastructureclient.AppNode
+import ru.ifmo.kirmanak.infrastructureclient.AppInstance
 import ru.ifmo.kirmanak.infrastructureclient.kubernetes.models.MetricsV1Beta1PodMetrics
 import java.math.BigDecimal
 
-internal open class KubernetesNode(pod: V1Pod, client: KubernetesClient) : AppNode {
+internal open class KubernetesInstance(pod: V1Pod, client: KubernetesClient) : AppInstance {
     private val name = pod.metadata?.name ?: throw AppClientException("Node name or the whole metadata is unknown!")
     private val cpuLoad = getUsage("cpu", client)
     private val memoryLoad = getUsage("memory", client)

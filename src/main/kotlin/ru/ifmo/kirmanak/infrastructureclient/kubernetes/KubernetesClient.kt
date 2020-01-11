@@ -7,7 +7,7 @@ import io.kubernetes.client.openapi.apis.CoreV1Api
 import io.kubernetes.client.openapi.models.V1Deployment
 import ru.ifmo.kirmanak.infrastructureclient.AppClient
 import ru.ifmo.kirmanak.infrastructureclient.AppClientException
-import ru.ifmo.kirmanak.infrastructureclient.AppNode
+import ru.ifmo.kirmanak.infrastructureclient.AppInstance
 
 private const val DEPLOYMENT_SELECTOR = "app"
 
@@ -18,7 +18,7 @@ open class KubernetesClient(
     private val metricsApi = MetricsV1Beta1Api(apiClient)
     private val appsApi = AppsV1Api(apiClient)
 
-    override fun getNodes(): Array<AppNode> {
+    override fun getAppInstances(): Array<AppInstance> {
         val dep = getDeployment()
 
         val selector = getDeploymentSelector(dep)
@@ -26,10 +26,10 @@ open class KubernetesClient(
 
         val pods = getPods(labelSelector)
 
-        return pods.items.map { KubernetesNode(it, this) }.toTypedArray()
+        return pods.items.map { KubernetesInstance(it, this) }.toTypedArray()
     }
 
-    override fun scaleNodes(count: Int) {
+    override fun scaleInstances(count: Int) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
