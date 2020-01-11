@@ -2,9 +2,11 @@ package ru.ifmo.kirmanak.infrastructureclient.kubernetes
 
 import io.kubernetes.client.openapi.ApiClient
 import io.kubernetes.client.openapi.ApiException
+import io.kubernetes.client.openapi.JSON
 import io.kubernetes.client.openapi.apis.AppsV1Api
 import io.kubernetes.client.openapi.apis.CoreV1Api
 import io.kubernetes.client.openapi.models.V1Deployment
+import io.kubernetes.client.openapi.models.V1Scale
 import ru.ifmo.kirmanak.infrastructureclient.AppClient
 import ru.ifmo.kirmanak.infrastructureclient.AppClientException
 import ru.ifmo.kirmanak.infrastructureclient.AppInstance
@@ -17,6 +19,8 @@ open class KubernetesClient(
     private val coreApi = CoreV1Api(apiClient)
     private val metricsApi = MetricsV1Beta1Api(apiClient)
     private val appsApi = AppsV1Api(apiClient)
+    private val json: JSON
+        get() = coreApi.apiClient.json
 
     override fun getAppInstances(): Array<AppInstance> {
         val dep = getDeployment()
@@ -30,7 +34,26 @@ open class KubernetesClient(
     }
 
     override fun scaleInstances(count: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (count == 0) return
+
+        val scale: V1Scale
+
+        try {
+            scale = appsApi.readNamespacedDeploymentScale(deployment, namespace, false.toString())
+        } catch (e: ApiException) {
+            throw AppClientException(e)
+        }
+
+        val currentCount = scale.spec?.replicas
+            ?: throw AppClientException("Unable to get replica count for deployment \"$deployment\"")
+        scale.spec?.replicas = currentCount + count
+
+        try {
+            val response = appsApi.replaceNamespacedDeploymentScale(deployment, namespace, scale, null, null, null)
+            println(response)
+        } catch (e: ApiException) {
+            throw AppClientException(e)
+        }
     }
 
     internal fun getMetricsPerPod() = metricsApi.getPodMetrics(namespace)
