@@ -29,6 +29,10 @@ open class KubernetesClient(
         return pods.items.map { KubernetesNode(it, this) }.toTypedArray()
     }
 
+    override fun scaleNodes(count: Int) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     internal fun getMetricsPerPod() = metricsApi.getPodMetrics(namespace)
 
     private fun getDeployment() =

@@ -9,4 +9,12 @@ interface AppClient {
      */
     @Throws(AppClientException::class)
     fun getNodes(): Array<AppNode>
+
+    /**
+     * Scales application instances count by {@param count}.
+     * Instances are added if {@param count} is positive and removed if it is negative.
+     * If {@param count} is zero nothing will be done.
+     */
+    @Throws(AppClientException::class)
+    fun scaleNodes(count: Int)
 }

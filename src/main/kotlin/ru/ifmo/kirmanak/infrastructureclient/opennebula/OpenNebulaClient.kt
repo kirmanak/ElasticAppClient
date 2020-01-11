@@ -8,7 +8,7 @@ import ru.ifmo.kirmanak.infrastructureclient.AppClient
 import ru.ifmo.kirmanak.infrastructureclient.AppClientException
 import ru.ifmo.kirmanak.infrastructureclient.AppNode
 
-class OpenNebulaClient(
+open class OpenNebulaClient(
     private val client: Client, private val groupId: Int, private val roleId: Int
 ) : AppClient {
 
@@ -18,6 +18,10 @@ class OpenNebulaClient(
         val vmIDs = getVMIdentifiers()
 
         return pool.filter { vmIDs.contains(it.id()) }.map { OpenNebulaNode(it) }.toTypedArray()
+    }
+
+    override fun scaleNodes(count: Int) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     private fun getVMIdentifiers(): Set<Int> {
