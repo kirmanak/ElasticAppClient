@@ -57,7 +57,7 @@ open class OpenNebulaClient(
     private fun getVMIdentifiers(): Set<Int> {
         val role = getRole()
         val vmList = getString(role, "VMS")
-        return vmList.split(",").map { it.toInt() }.toSortedSet()
+        return vmList.split(",").filter { it.isNotBlank() }.map { it.toInt() }.toSortedSet()
     }
 
     private fun findRole(): Node? {
