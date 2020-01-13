@@ -1,4 +1,4 @@
-package ru.ifmo.kirmanak.infrastructureclient.kubernetes.models
+package ru.ifmo.kirmanak.elasticappclient.kubernetes.models
 
 import io.kubernetes.client.openapi.models.V1ObjectMeta
 

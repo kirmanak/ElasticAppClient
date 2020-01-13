@@ -1,10 +1,10 @@
-package ru.ifmo.kirmanak.infrastructureclient.kubernetes
+package ru.ifmo.kirmanak.elasticappclient.kubernetes
 
 import io.kubernetes.client.util.ClientBuilder
 import io.kubernetes.client.util.KubeConfig
 import org.junit.Test
-import ru.ifmo.kirmanak.infrastructureclient.AppClient
-import ru.ifmo.kirmanak.infrastructureclient.AppClientFactory
+import ru.ifmo.kirmanak.elasticappclient.AppClient
+import ru.ifmo.kirmanak.elasticappclient.AppClientFactory
 import java.nio.file.Files
 import java.nio.file.Paths
 

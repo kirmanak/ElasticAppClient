@@ -1,4 +1,4 @@
-package ru.ifmo.kirmanak.infrastructureclient
+package ru.ifmo.kirmanak.elasticappclient
 
 /**
  * Interface to access elastic application instance information.

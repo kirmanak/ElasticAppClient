@@ -1,4 +1,4 @@
-package ru.ifmo.kirmanak.infrastructureclient.opennebula
+package ru.ifmo.kirmanak.elasticappclient.opennebula
 
 import org.opennebula.client.Client
 import org.opennebula.client.template.Template
@@ -6,9 +6,9 @@ import org.opennebula.client.vm.VirtualMachine
 import org.opennebula.client.vm.VirtualMachinePool
 import org.opennebula.client.vmgroup.VMGroup
 import org.w3c.dom.Node
-import ru.ifmo.kirmanak.infrastructureclient.AppClient
-import ru.ifmo.kirmanak.infrastructureclient.AppClientException
-import ru.ifmo.kirmanak.infrastructureclient.AppInstance
+import ru.ifmo.kirmanak.elasticappclient.AppClient
+import ru.ifmo.kirmanak.elasticappclient.AppClientException
+import ru.ifmo.kirmanak.elasticappclient.AppInstance
 import kotlin.math.min
 
 open class OpenNebulaClient(

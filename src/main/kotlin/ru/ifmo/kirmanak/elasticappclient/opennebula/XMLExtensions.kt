@@ -1,10 +1,10 @@
-package ru.ifmo.kirmanak.infrastructureclient.opennebula
+package ru.ifmo.kirmanak.elasticappclient.opennebula
 
 import org.opennebula.client.OneResponse
 import org.w3c.dom.Element
 import org.w3c.dom.Node
 import org.w3c.dom.NodeList
-import ru.ifmo.kirmanak.infrastructureclient.AppClientException
+import ru.ifmo.kirmanak.elasticappclient.AppClientException
 import java.io.ByteArrayInputStream
 import javax.xml.parsers.DocumentBuilderFactory
 import javax.xml.xpath.XPathConstants

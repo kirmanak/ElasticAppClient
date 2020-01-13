@@ -1,11 +1,11 @@
-package ru.ifmo.kirmanak.infrastructureclient.kubernetes
+package ru.ifmo.kirmanak.elasticappclient.kubernetes
 
 import com.google.gson.reflect.TypeToken
 import io.kubernetes.client.openapi.ApiClient
 import io.kubernetes.client.openapi.ApiResponse
 import okhttp3.Call
-import ru.ifmo.kirmanak.infrastructureclient.AppClientException
-import ru.ifmo.kirmanak.infrastructureclient.kubernetes.models.MetricsV1Beta1PodMetricsList
+import ru.ifmo.kirmanak.elasticappclient.AppClientException
+import ru.ifmo.kirmanak.elasticappclient.kubernetes.models.MetricsV1Beta1PodMetricsList
 
 private const val API_PATH = "/apis/metrics.k8s.io/v1beta1"
 private val AVAILABLE_ACCEPT_HEADERS = arrayOf(

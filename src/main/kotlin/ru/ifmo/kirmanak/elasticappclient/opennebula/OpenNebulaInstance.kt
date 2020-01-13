@@ -1,8 +1,8 @@
-package ru.ifmo.kirmanak.infrastructureclient.opennebula
+package ru.ifmo.kirmanak.elasticappclient.opennebula
 
 import org.opennebula.client.vm.VirtualMachine
-import ru.ifmo.kirmanak.infrastructureclient.AppClientException
-import ru.ifmo.kirmanak.infrastructureclient.AppInstance
+import ru.ifmo.kirmanak.elasticappclient.AppClientException
+import ru.ifmo.kirmanak.elasticappclient.AppInstance
 
 internal class OpenNebulaInstance(vm: VirtualMachine) : AppInstance {
     private val name: String = vm.name ?: throw AppClientException("Unknown vm name")

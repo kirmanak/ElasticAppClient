@@ -1,9 +1,9 @@
-package ru.ifmo.kirmanak.infrastructureclient.kubernetes
+package ru.ifmo.kirmanak.elasticappclient.kubernetes
 
 import io.kubernetes.client.openapi.models.V1Pod
-import ru.ifmo.kirmanak.infrastructureclient.AppClientException
-import ru.ifmo.kirmanak.infrastructureclient.AppInstance
-import ru.ifmo.kirmanak.infrastructureclient.kubernetes.models.MetricsV1Beta1PodMetrics
+import ru.ifmo.kirmanak.elasticappclient.AppClientException
+import ru.ifmo.kirmanak.elasticappclient.AppInstance
+import ru.ifmo.kirmanak.elasticappclient.kubernetes.models.MetricsV1Beta1PodMetrics
 import java.math.BigDecimal
 
 internal open class KubernetesInstance(pod: V1Pod, client: KubernetesClient) : AppInstance {

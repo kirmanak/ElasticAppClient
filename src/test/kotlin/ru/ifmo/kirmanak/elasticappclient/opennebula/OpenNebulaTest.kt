@@ -1,9 +1,9 @@
-package ru.ifmo.kirmanak.infrastructureclient.opennebula
+package ru.ifmo.kirmanak.elasticappclient.opennebula
 
 import org.junit.Test
 import org.opennebula.client.Client
-import ru.ifmo.kirmanak.infrastructureclient.AppClient
-import ru.ifmo.kirmanak.infrastructureclient.AppClientFactory
+import ru.ifmo.kirmanak.elasticappclient.AppClient
+import ru.ifmo.kirmanak.elasticappclient.AppClientFactory
 
 class OpenNebulaTest {
     private val oneClient: AppClient
