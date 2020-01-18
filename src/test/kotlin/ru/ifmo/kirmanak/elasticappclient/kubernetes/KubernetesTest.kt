@@ -34,11 +34,10 @@ class KubernetesTest {
         kubeClient.getAppInstances().forEach { println(it.getRAMLoad()) }
     }
 
-
-    /*@Test
+    @Test
     fun addInstance() {
         kubeClient.scaleInstances(1)
-    }*/
+    }
 
     @Test
     fun removeInstance() {
