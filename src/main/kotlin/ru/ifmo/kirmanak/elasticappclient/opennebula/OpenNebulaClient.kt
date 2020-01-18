@@ -32,7 +32,6 @@ open class OpenNebulaClient(
     }
 
     private fun addInstances(count: Int) {
-        // TODO deploy undeployed instead of creating new
         val template = Template(templateId, client)
         val roleName = getString(getRole(), "NAME")
         val groupTemplate = "VMGROUP = [ VMGROUP_ID = \"$groupId\", ROLE = \"$roleName\" ]"
@@ -48,7 +47,7 @@ open class OpenNebulaClient(
         val toRemove = min(count, list.size)
         if (toRemove == 0) return
 
-        list.take(toRemove).forEach { throwIfError(it.undeploy(false)) }
+        list.take(toRemove).forEach { throwIfError(it.terminate()) }
     }
 
     private fun getRole(): Node =
