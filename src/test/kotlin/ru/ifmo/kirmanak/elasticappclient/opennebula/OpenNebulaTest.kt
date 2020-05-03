@@ -5,11 +5,23 @@ import org.opennebula.client.Client
 import ru.ifmo.kirmanak.elasticappclient.AppClient
 import ru.ifmo.kirmanak.elasticappclient.AppClientFactory
 
+private const val ENV_LOGIN = "OPEN_NEBULA_LOGIN_TEST"
+private const val ENV_PASS = "OPEN_NEBULA_PASSWORD_TEST"
+private const val ENV_ADDR = "OPEN_NEBULA_ADDRESS_TEST"
+
 class OpenNebulaTest {
     private val oneClient: AppClient
 
+    private companion object {
+        fun getEnv(name: String) =
+            System.getenv(name) ?: throw IllegalArgumentException("Set $name environmental variable")
+    }
+
     init {
-        val client = Client("oneadmin:ConUsUlAtim3", null)
+        val login = getEnv(ENV_LOGIN)
+        val password = getEnv(ENV_PASS)
+        val address = getEnv(ENV_ADDR)
+        val client = Client("${login}:${password}", address)
         oneClient = AppClientFactory.getClient(client, 0, 0, 1)
     }
 
