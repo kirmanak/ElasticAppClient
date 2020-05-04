@@ -10,7 +10,7 @@ repositories {
 }
 
 dependencies {
-    implementation("io.kubernetes:client-java:7.0.0")
+    implementation("io.kubernetes:client-java:8.0.0")
     implementation("org.apache.xmlrpc:xmlrpc-client:3.1.3")
     implementation(kotlin("stdlib-jdk8"))
     implementation(files("libs/org.opennebula.client.jar"))
