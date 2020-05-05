@@ -1,5 +1,3 @@
-import org.gradle.kotlin.dsl.support.unzipTo
-
 plugins {
     kotlin("jvm") version "1.3.72"
     `java-library`
@@ -14,11 +12,8 @@ repositories {
     mavenCentral()
 }
 
-val openNebulaLib = "libs/org.opennebula.client.jar"
-
 dependencies {
     api("io.kubernetes:client-java:8.0.0")
-    api(files(openNebulaLib))
 
     implementation("org.apache.xmlrpc:xmlrpc-client:3.1.3")
     implementation(kotlin("stdlib-jdk8"))
@@ -33,13 +28,6 @@ tasks {
     }
     compileTestKotlin {
         kotlinOptions.jvmTarget = "1.8"
-    }
-
-    jar {
-        val unzippedPath = "$buildDir/unzipped/"
-        unzipTo(file(unzippedPath), file(openNebulaLib))
-        delete("$unzippedPath/META-INF")
-        from(unzippedPath)
     }
 
     javadoc {
