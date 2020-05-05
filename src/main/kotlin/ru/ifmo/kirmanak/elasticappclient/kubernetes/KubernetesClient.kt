@@ -46,8 +46,7 @@ open class KubernetesClient(
         scale.spec?.replicas = currentCount + count
 
         try {
-            val response = appsApi.replaceNamespacedDeploymentScale(deployment, namespace, scale, null, null, null)
-            println(response)
+            appsApi.replaceNamespacedDeploymentScale(deployment, namespace, scale, null, null, null)
         } catch (e: ApiException) {
             throw AppClientException(e)
         }
