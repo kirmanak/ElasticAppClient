@@ -2,7 +2,6 @@ package ru.ifmo.kirmanak.elasticappclient.kubernetes
 
 import io.kubernetes.client.openapi.ApiClient
 import io.kubernetes.client.openapi.ApiException
-import io.kubernetes.client.openapi.JSON
 import io.kubernetes.client.openapi.apis.AppsV1Api
 import io.kubernetes.client.openapi.apis.CoreV1Api
 import io.kubernetes.client.openapi.models.V1Deployment
@@ -19,8 +18,6 @@ open class KubernetesClient(
     private val coreApi = CoreV1Api(apiClient)
     private val metricsApi = MetricsV1Beta1Api(apiClient)
     private val appsApi = AppsV1Api(apiClient)
-    private val json: JSON
-        get() = coreApi.apiClient.json
 
     override fun getAppInstances(): Array<AppInstance> {
         val dep = getDeployment()
@@ -30,7 +27,7 @@ open class KubernetesClient(
 
         val pods = getPods(labelSelector)
 
-        return pods.items.map { KubernetesInstance(it, this) }.toTypedArray()
+        return pods.items.mapNotNull { KubernetesInstance.create(it, this) }.toTypedArray()
     }
 
     override fun scaleInstances(count: Int) {
@@ -75,10 +72,6 @@ open class KubernetesClient(
             throw AppClientException(e)
         }
 
-    private fun getDeploymentSelector(dep: V1Deployment) = dep
-        .spec
-        ?.selector
-        ?.matchLabels
-        ?.get(DEPLOYMENT_SELECTOR)
+    private fun getDeploymentSelector(dep: V1Deployment) = dep.spec?.selector?.matchLabels?.get(DEPLOYMENT_SELECTOR)
         ?: throw AppClientException("Deployment \"$deployment\" has no \"$DEPLOYMENT_SELECTOR\" selector")
 }

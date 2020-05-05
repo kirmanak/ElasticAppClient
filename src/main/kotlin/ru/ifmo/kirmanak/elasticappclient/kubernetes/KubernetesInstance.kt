@@ -4,45 +4,49 @@ import io.kubernetes.client.openapi.models.V1Pod
 import ru.ifmo.kirmanak.elasticappclient.AppClientException
 import ru.ifmo.kirmanak.elasticappclient.AppInstance
 import ru.ifmo.kirmanak.elasticappclient.kubernetes.models.MetricsV1Beta1PodMetrics
-import java.math.BigDecimal
+import java.util.concurrent.atomic.DoubleAdder
 
-internal open class KubernetesInstance(pod: V1Pod, client: KubernetesClient) : AppInstance {
-    private val name = pod.metadata?.name ?: throw AppClientException("Node name or the whole metadata is unknown!")
-    private val cpuLoad = getUsage("cpu", client)
-    private val memoryLoad = getUsage("memory", client)
+internal data class KubernetesInstance(
+    private val name: String,
+    private val CPULoad: Double,
+    private val RAMLoad: Double
+) : AppInstance {
 
-    private fun getUsage(metricName: String, client: KubernetesClient): Double {
-        val podContainers = getPodMetrics(client).containers
-            ?: throw AppClientException("Node \"$name\" containers were not found!")
+    companion object {
+        fun create(pod: V1Pod, client: KubernetesClient): KubernetesInstance? {
+            val name = pod.metadata?.name ?: throw AppClientException("Pod name or whole metadata is unknown")
+            val cpuLoad = getUsage(name, "cpu", client) ?: return null
+            val ramLoad = getUsage(name, "memory", client) ?: return null
 
-        return podContainers.fold(BigDecimal.ZERO) { acc, container ->
-            val usage = container.usage?.get(metricName)?.number
-                ?: throw AppClientException("Usage of \"$metricName\" was not found for container \"${container.name}\"")
-            acc.add(usage)
-        }.toDouble()
-    }
-
-    private fun getPodMetrics(client: KubernetesClient): MetricsV1Beta1PodMetrics {
-        val allMetrics = client.getMetricsPerPod().items
-            ?: throw AppClientException("Metrics API response has no items")
-
-        for (item in allMetrics) {
-            val itemName = item.metadata?.name ?: throw AppClientException("Metrics received without name or metadata!")
-
-            if (itemName == name)
-                return item
+            return KubernetesInstance(name, cpuLoad, ramLoad)
         }
 
-        throw AppClientException("Metrics for pod \"$name\" were not found")
+        private fun getUsage(podName: String, metricName: String, client: KubernetesClient): Double? {
+            val podContainers = getPodMetrics(podName, client)?.containers
+
+            return podContainers?.fold(DoubleAdder()) { acc, container ->
+                val usage = container.usage?.get(metricName)?.number
+                    ?: throw AppClientException("Usage of \"$metricName\" was not found for container \"${container.name}\"")
+                acc.add(usage.toDouble())
+                acc
+            }?.toDouble()
+        }
+
+        private fun getPodMetrics(podName: String, client: KubernetesClient): MetricsV1Beta1PodMetrics? {
+            val allMetrics = client.getMetricsPerPod().items ?: return null
+
+            for (item in allMetrics) {
+                if (item.metadata?.name == podName)
+                    return item
+            }
+
+            return null
+        }
     }
 
-    override fun getCPULoad() = cpuLoad
+    override fun getCPULoad() = CPULoad
 
-    override fun getRAMLoad() = memoryLoad
+    override fun getRAMLoad() = RAMLoad
 
     override fun getName() = name
-
-    override fun toString(): String {
-        return "KubernetesNode(name='$name', CPULoad=$cpuLoad, RAMLoad=$memoryLoad)"
-    }
 }
