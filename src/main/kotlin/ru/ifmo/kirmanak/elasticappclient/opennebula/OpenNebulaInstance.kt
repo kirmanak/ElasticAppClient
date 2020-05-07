@@ -6,7 +6,7 @@ import ru.ifmo.kirmanak.elasticappclient.AppInstance
 
 internal class OpenNebulaInstance(vm: VirtualMachine) : AppInstance {
     private val name: String = vm.name ?: throw AppClientException("Unknown vm name")
-    private val cpuLoad = getUsage("CPU", vm)
+    private val cpuLoad = getUsage("CPU", vm) / 100
     private val memoryLoad = getUsage("MEMORY", vm) * 1024
 
     override fun getCPULoad() = cpuLoad
